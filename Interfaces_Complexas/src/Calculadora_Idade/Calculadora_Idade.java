@@ -4,6 +4,9 @@
  */
 package Calculadora_Idade;
 
+import java.util.Date;
+import java.util.Calendar;
+import java.time.*;
 /**
  *
  * @author acer
@@ -102,10 +105,9 @@ public class Calculadora_Idade extends javax.swing.JFrame {
 
     private void btnCalcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcActionPerformed
         int an = Integer.parseInt(txtAn.getValue().toString());
-        int id = 2024 - an;
-        lblIdade.setText(Integer.toString(id));
-        
-        
+        int ano_atual = LocalDate.now().getYear();
+        int idade = ano_atual - an;
+        lblIdade.setText(String.valueOf(idade));
     }//GEN-LAST:event_btnCalcActionPerformed
 
     /**
