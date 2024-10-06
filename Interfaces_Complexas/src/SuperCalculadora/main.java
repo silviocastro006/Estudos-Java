@@ -20,8 +20,12 @@ public class main {
             JFrame tela = new JFrame();
             tela.setSize(515,639); // Alterar o tamanho da tela principal
             tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            tela.setLocationRelativeTo(null); // Ao invés de usar o setbounds posso apenas indicar que a tela fica relativa, então como null, a mesma fica no mesmo
-            tela.setTitle("Exercício Curso em Vídeo aula 07");
+            
+            // Ao invés de usar o setbounds posso apenas indicar que a tela fica relativa, 
+            //então como null, a mesma fica no meio
+            tela.setLocationRelativeTo(null); 
+            
+           tela.setTitle("Exercício Curso em Vídeo aula 07");
 
             // Criação de uma imagem para inserir no label e colocar no fundo o
             ImageIcon label_fundo = new ImageIcon("src\\SuperCalculadora\\Imagens\\fundo_tela.png");
