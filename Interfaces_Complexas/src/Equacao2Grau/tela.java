@@ -90,7 +90,7 @@ public class tela {
         entre3.setForeground(Color.black);
         
         
-        // Mostrando o calculo de razies abaixo:
+        // Mostrando o calculo de raizes abaixo:
         JLabel delta = new JLabel("<html>&Delta; = </html>");
         delta.setSize(80, 50);
         delta.setLocation(40, 135);
