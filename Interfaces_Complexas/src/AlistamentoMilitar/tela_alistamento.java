@@ -108,11 +108,6 @@ public class tela_alistamento {
            }
            
        });
-               
-
-       
-       
-    
        tela.setVisible(true);
        tela.setResizable(false);
     }
