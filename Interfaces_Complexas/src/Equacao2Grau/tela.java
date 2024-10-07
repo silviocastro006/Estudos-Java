@@ -189,7 +189,7 @@ public class tela {
         pan_resultados.setLayout(null);
         
         // Adicionar componenentes no pan_resultados
-        pan_resultados.setVisible(true);
+        pan_resultados.setVisible(false);
         
         JLabel Desc1 = new JLabel("<html>&Delta; =");
         Desc1.setSize(100,50);
@@ -229,6 +229,8 @@ public class tela {
             
             @Override
             public void actionPerformed(ActionEvent ae) {
+                
+                pan_resultados.setVisible(true);
                                 
                 int val_a = Integer.parseInt(String.valueOf(spinA.getValue()));
                 int val_b = Integer.parseInt(String.valueOf(spinB.getValue()));
