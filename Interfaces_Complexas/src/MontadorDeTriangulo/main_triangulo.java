@@ -199,7 +199,7 @@ public class main_triangulo extends javax.swing.JFrame {
         int b = Integer.parseInt(String.valueOf(sliB.getValue()));
         int c = Integer.parseInt(String.valueOf(sliC.getValue()));
         if (a<b+c && b<a+c && c<a+b){
-            lbl_status.setText("Foram um triângulo");
+            lbl_status.setText("Formam um triângulo");
             if(a==b && b==c){
                 lbl_tipo.setText("Equilátero");
             } else if(a!=b && b!=c && a!=c){
