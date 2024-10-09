@@ -143,10 +143,8 @@ JOptionPane.showMessageDialog(null, status, "Verificando informações", JOption
 
 }
 }
-```
-##Resultado Final
-![image](https://github.com/user-attachments/assets/25439c4d-7a1e-415f-ae5e-1f59a927c9f5)
-
-
 });
 ```
+## Resultado Final
+
+![image](https://github.com/user-attachments/assets/25439c4d-7a1e-415f-ae5e-1f59a927c9f5)
