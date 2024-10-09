@@ -3,333 +3,270 @@
 
 ## Enunciado
 
-Cria uma calculadora que mostre resto da divisão, elevado ao cubo, raiz quadrada, raiz cúbica, valor absoluto 
+Crie a interface abaixo com operadores ternários para verificar a idade conforme a data inserida:
 
+- O ano atual deverá ser o retirado do sistema operacional ( não inserir manualmente )
+- Se idade >= 18 será Maior idade
+- Se idade < 18 será Menor idade
+- Se idade >= 100 <=115 será Ancião
+- Se idade > 115 será Possivelmente morto
 </aside>
 
-![image](https://github.com/user-attachments/assets/9b626305-852f-4653-88cd-d1e461ada4f7)
-
-# Montando o exercício
-
-Bom, eu não consegui achar a imagem exata da calculadora e como eu achei o modelo bem feio, decidi fazer algo pelo canva, criando todos os componentes e fazendo da minha forma, ficando assim:
-
-![image](https://github.com/user-attachments/assets/f3c20bcc-70c3-49c8-8ce6-db2ece98a740)
+![image](https://github.com/user-attachments/assets/994861a4-61fd-4a6c-9a54-1cb765412d37)
 
 
-## Entendendo como o código funciona
-
-### Pastas
-
-A organização do projeto é bem simples, ficando um pacote para o código e outro para as imagens.
-
-![image](https://github.com/user-attachments/assets/4d200216-139c-42c1-8bd5-d338e8cf6e2c)
+![image](https://github.com/user-attachments/assets/c9938b2f-d402-439a-a18f-360905482907)
 
 
-A parte importante de organizar desta forma é saber de onde as imagens são por isso que a pasta se chama  `SuperCalculadora.Imagens`.
+# Criando a interface
 
-### Importações iniciais
+Bom vamos fazer um pouquinho mais bonito né? E por enquanto não vou usar o `Swing low code`, vou fazer na mão, mas com outros elementos
 
-Basicamente usamos a lista abaixo que seria para a criação da interface, os eventos e “escutadores” de eventos para os componentes e a math para cálculo
+## Tela de fundo
+
+Continuei o mesmo padrão que usei no exercício anterior de 500x600, então criei a seguinte tela de fundo: 
+
+![image](https://github.com/user-attachments/assets/edc7ae50-a51b-47ae-b51b-e7a3207fe27b)
+
+
+### Vamos então criar o programa base no Java, começando com o JFrame:
 
 ```java
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.math.*;
-```
-
-### Criação da tela inicial
-
-Dentro do `main` do programa, criamos a tela principal sendo o `JFrame`, com seu tamanho, localização no monitor, forma de fechamento e título
-
-```java
-// Criando uma tela principal com o JFrame
-JFrame tela = new JFrame();
-tela.setSize(515,639); // Alterar o tamanho da tela principal
+// Criando a tela principal
+JFrame tela = new JFrame("Exercício aula 8 - Verificador de Idade");
+tela.setSize(515, 630);
 tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-// Ao invés de usar o setbounds posso apenas indicar que a tela fica relativa, 
-//então como null, a mesma fica no meio
-tela.setLocationRelativeTo(null); 
-
-tela.setTitle("Exercício Curso em Vídeo aula 07");
+tela.setLocationRelativeTo(null);
 ```
 
-### Criação da imagem de fundo
+Aqui é bem padrão, instanciamos um objeto, definimos o seu tamanho, seu comportamento ao fechar e onde ele vai ficar na tela.
 
-Como o `JFrame` não um parâmetro para inserir uma imagem de fundo, podemos criar um frame, inserir uma imagem nele e adicioná-lo na tela.
+### Inserindo a imagem no fundo da tela
+
+Como o `JFrame` não tem uma propriedade embutida para receber imagem, criamos um `JLabel` indicando uma imagem pra ele, definindo um valor exato e colocamos na tela principal.
 
 ```java
-// Criação de uma imagem para inserir no label e colocar no fundo o
-ImageIcon label_fundo = new ImageIcon("src\\SuperCalculadora\\Imagens\\fundo_tela.png");
-JLabel fundo = new JLabel(label_fundo);
+ // Criar um label para por uma imagem de fundo
+        
+ImageIcon image = new ImageIcon("src\\Verificador_Idade\\imagens\\tela_idade.png");
+JLabel fundo = new JLabel(image);
 tela.add(fundo);
-fundo.setBounds(0, 0, 500, 600); 
-// a imagem é 500 x 600 mas a tela principal ocupa um pouco do espaço, então
-// coloquei um acréscimo de 15px de width e 39px de height
+fundo.setBounds(0,0,500,600);
 ```
+
+Note que o caminho precisa estar relativo, senão ele não vai achar a imagem, como todo o projeto Java tem a pasta `src`, então basta deixar desta forma.
+
+## Criando os componentes principais
+
+### Botão
+
+Para criar um botão, também é algo simples, mas desta vez eu não fiz o seu gráfico, apenas criei de forma padrão no Java.
+
+```java
+// Criar um botão em algum lugar
+JButton botao = new JButton("Calcular");
+botao.setSize(150, 30);
+fundo.add(botao);
+botao.setLocation(175, 352);
+botao.setForeground(Color.black);
+botao.setBackground(Color.decode("#d0f0f4"));
+botao.setFont(new Font("Arial",Font.BOLD,20));
+botao.setFocusPainted(false);
+```
+
+Repare que o `setFocusPainted` é para tirar o retângulo do texto de dentro do botão quando passamos o mouse para ficar um pouco mais limpo.
+
+### Input para o nome
+
+É comum confundir o nome dos widgets ainda mais quando usa duas linguagens diferentes, como no `Python` é `Entry`, no `Java` é `JTextField`, seu input padrão de texto.
+
+```java
+// Criando o input para o nome
+ JTextField input_nome = new JTextField();
+ input_nome.setSize(263,36);
+ input_nome.setLocation(170, 223);
+ input_nome.setFont(new Font("Arial",Font.PLAIN,20));
+ input_nome.setForeground(Color.decode("#d0d0cf"));
+ input_nome.setText("Clique para digitar nome...");
+ input_nome.setMargin(new Insets(0,10,0,0));
+ fundo.add(input_nome);
+```
+
+Um método diferente que usei foi o `setMargin`, ele serve para indicar as margens internas do texto dentro do widget, eu usei para criar uma indentação um pouco para a direita, para não ficar colado com a borda do input.
+
+### `Spinner` para o ano de nascimento
+
+`Spinner` é um componente que pode ter várias formas de tratamento, como eu estava fazendo um exercício simples, não quis me aprofundar tanto, apenas deixei como modelo numérico, adicionei mínimo e máximo.
+
+```java
+// Criando o spinner para a o ano
+SpinnerModel model = new SpinnerNumberModel(1980, 1900, 999999999, 1);
+JSpinner input_ano = new JSpinner(model);
+input_ano.setSize(163, 36);
+input_ano.setLocation(270, 280);
+       
+// Acessando o componente de texto dentro do spinner para editar
+JComponent editor = input_ano.getEditor();
+JFormattedTextField txtspinner = ((JSpinner.DefaultEditor) editor).getTextField();
+ txtspinner.setFont(new Font("Arial",Font.PLAIN,25));
+ txtspinner.setHorizontalAlignment(JFormattedTextField.CENTER);
+```
+
+Algo diferente também que aprendi foi acessar os componentes internos de casa widget, como o `JComponent`, podemos acessar o editor do widget que quisermos e a partir dele acessar como o texto será formatado, de forma mais específica, no meu caso acessei, mudei a sua fonte e o seu alinhamento.
+
+### `JLabel` para o resultado final
+
+Uma das últimas partes é adicionar o resultado da operação que formos fazer, então criei um `JLabel` para poder mostrar a manipulação dos dados que for resgatar.
+
+```java
+// Adicionando label para resultado
+       
+JLabel resultado = new JLabel();
+resultado.setText("Clique em calcular para ver o resultado");
+resultado.setForeground(Color.decode("#d0d0cf"));
+resultado.setSize(360, 36);
+resultado.setLocation(75, 491);       
+resultado.setFont(new Font("Arial",Font.PLAIN,20));
+fundo.add(resultado);
+```
+
+## Preparando o script
+
+### Resgatando o ano atual do sistema
+
+Uma prática bem padrão é utilizar os dados vindos do sistema operacional, para que não seja necessário alterar manualmente, sendo assim importei a biblioteca `Java.Time` para utilizar alguns métodos específicos.
+
+```java
+import java.time.*;
+LocalDate tempo = LocalDate.now();
+int ano_atual = tempo.getYear();
+```
+
+Desta forma a variável `ano_atual` terá o valor inteiro do ano vindo do SO.
+
+### Adicionando eventos no `input_nome`
+
+Meu intuito inicial é quando clicado no `input_nome` ele apague a “máscara” e coloque o texto para preto.
+
+```java
+input_nome.addMouseListener(new MouseAdapter(){
+           
+ @Override
+ public void mousePressed(MouseEvent e){
+     input_nome.setForeground(Color.black);
+     input_nome.setText("");
+ }
+ 
+ @Override
+ public void mouseReleased(MouseEvent e){
+     
+ }
+  
+});
+```
+
+Além disso se for clicado mas não for digitado nada, ou seja perder o foco, ele volta ao que estava no início
+
+```java
+input_nome.addFocusListener(new FocusAdapter() {
+       
+ @Override
+ public void focusLost(java.awt.event.FocusEvent e){
+     if(input_nome.getText().isEmpty()){
+         input_nome.setForeground(Color.decode("#d0d0cf"));
+         input_nome.setText("Clique para digitar nome...");
+     }
+}});
+       
+```
+
+### Adicionando eventos para o botão
+
+O botão que comanda toda a parte de manipulação dos dados, além disso é onde a maior parte dos comandos ficam (pelo menos em um evento), então nesta primeira parte nós definimos uma `variável String chamada tipo global` para ser enxergada em todas as funções, a primeira parte é restado o valor que está dentro do `input_nome` e enquanto for padrão ou vazio ele dará uma mensagem de erro.
+
+```java
+botao.addActionListener(new ActionListener(){
+		String tipo;
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+		// Pegar valor do nome
+		String nome = input_nome.getText();
+		while(nome.equals("Clique para digitar nome...")|| nome.equals("")){
+				JOptionPane.showMessageDialog(null, "Por favor insira um nome...", "Erro", JOptionPane.ERROR_MESSAGE);
+				input_ano.setValue(1980);
+				return;
+}
+```
+
+Feito isso vamos calcular a idade com outra tratativa de erro onde o ano não poderá ser menor que 1940 nem maior que 2023, fora isso é bem básico.
+
+```java
+// Calcular idade
+                int ano_nasc = Integer.parseInt(String.valueOf(input_ano.getValue()));
+                while(ano_nasc<1900 || ano_nasc >2023){
+                    JOptionPane.showMessageDialog(null, "Insira um ano maior que 1940 e menor que 2023", "Erro", JOptionPane.ERROR_MESSAGE);
+                    input_ano.setValue(1980);
+                    return;
+                }
+                int idade = (ano_atual-ano_nasc);
+```
+
+Fora isso definimos algumas condições para os possíveis resultados para definir o que será mostrado na `label` resposta.
+
+```java
+// Condições: 
+                
+      if(idade> 115){
+          tipo = "Possivelmente morto";
+      } else if((idade>=100 && idade <= 115)){
+          tipo = "Ancião";
+      } else if(idade >= 18){
+          tipo = "Maior de idade";
+      } else if(idade < 18){
+          tipo = "Menor de idade";
+      }
+
+      
+      // Inserir dados no resultado
+      resultado.setForeground(Color.black);
+      String resposta = String.format("%s com %d anos", tipo,idade);
+      resultado.setText(resposta);
+      resultado.setHorizontalAlignment(JTextField.CENTER);
+      
+      // limpar o input nome
+      input_nome.setForeground(Color.decode("#d0d0cf"));
+      input_nome.setText("Clique para digitar nome...");
+      input_ano.setValue(1980);
+     
+  }
+ 
+});
+```
+
+## Finalizando o programa
+
+```java
+// Adicionando na tela
+       fundo.add(input_ano);
+       
+        
+        
+        
+  // Criando o posicionamento e setar a tela para mostrar
+  tela.setResizable(false);
+  tela.setVisible(true);
+  
+  
+  
+}
+}
+```
+
+# Quer ver o código completo?
 
 <aside>
 💡
 
-Uma coisa importante é se criarmos uma tela de por exemplo 500x600 e um frame com o mesmo tamanho pensando que a imagem ocupará a tela cheia, na verdade por causa do menu superior e as bordas, ele ocupa um pouco do espaço total, então no exemplo abaixo, como o meu `label` era 500 x 600, adicionei 15 no `width` e 30 no `height` para o `JFrame` ficando 515 x 639
+Acesse o meu repositório de **`github`** para ver todos os meus códigos: https://github.com/silviocastro006/Estudos-Java
 
 </aside>
-
-### Criando os `labels` para a informação superior
-
-Aqui ficará a parte de informe o seu valor, mas seria apenas um `label` com configuração de fonte, cor, e especificação do local.
-
-```java
-// Criar os labels de informação
-JLabel informe = new JLabel("Informe um valor:");
-informe.setFont(new Font("Calibri",Font.BOLD, 25));
-fundo.add(informe);
-informe.setBounds(20, 150, 200, 50);
-informe.setForeground(Color.WHITE);
-```
-
-### Criando um spinner para seleção de valor
-
-Um spinner é úm campo de texto com uma parte de setas para aumentar e diminuir o valor, além disso o usuário poderá mudar de forma direta.
-
-```java
-// Criando um seletor de valor
-SpinnerNumberModel modelo = new SpinnerNumberModel(0,0,100,1);
-JSpinner spinner = new JSpinner();
-spinner.setFont(new Font("Arial", Font.BOLD, 20));
-fundo.add(spinner);
-spinner.setBounds(220, 158, 125, 30);
-```
-
-### Alterando a aparência do ToolTip
-
-O `UiManager` auxilia a mudar a cor dos elementos do swing, sendo assim mudei a cor de fundo do `tooltip` para amarelo, a cor da letra para preto e a fonte para Arial 20 com negrito.
-
-```java
-// Alterando a aparencia do tool tip
-UIManager.put("ToolTip.background", Color.decode("#ffff8f"));
-UIManager.put("ToolTip.foreground", Color.black);
-UIManager.put("ToolTip.font", new Font("Artial", Font.BOLD, 20));
-```
-
-### Criando os `labels` para a área de resultado ( título )
-
-A partir de agora estou criando os títulos das coisas que vamos mostrar na parte de resultados, seguindo os seguintes passos:
-
-- Criando os objetos
-- Inserindo no widget pai
-- Alterando o tamanho da fonte
-- Organizando na tela
-
-```java
-// Labels para mostrar as informações do resultado
-            
-// ------- Título
-// Criação
-JLabel div2 = new JLabel("Resto da divisão por 2");
-JLabel ele_cubo = new JLabel("Elevado ao Cubo");
-JLabel raiz_quad = new JLabel("Raiz Quadrada");
-JLabel raiz_cub = new JLabel("Raiz Cúbica");
-JLabel abs = new JLabel("Valor Absoluto");
-
-// Inserir no frame fundo
-fundo.add(div2);
-fundo.add(ele_cubo);
-fundo.add(raiz_quad);
-fundo.add(raiz_cub);
-fundo.add(abs);
-
-// Alterar tamanho da fonte
-div2.setFont(new Font("Arial", Font.BOLD, 15));
-ele_cubo.setFont(new Font("Arial", Font.BOLD, 15));
-raiz_quad.setFont(new Font("Arial", Font.BOLD, 15));
-raiz_cub.setFont(new Font("Arial", Font.BOLD, 15));
-abs.setFont(new Font("Arial", Font.BOLD, 15));
-
-// Organização da tela
-div2.setBounds(30, 280, 160, 50);
-ele_cubo.setBounds(30, 340, 160, 50);
-raiz_quad.setBounds(30, 400, 160, 50);
-raiz_cub.setBounds(30, 460, 160, 50);
-abs.setBounds(30, 520, 160, 50);
-```
-
-### Criando os `labels` para a área de resultado ( valores )
-
-Agora fazemos a mesma coisa, porém para o resultado de cada um, a única diferente é que trocamos a cor da letra para verde `#51a30a`
-
-```java
-// ------- Resultad
-// Criação
-JLabel res_div2 = new JLabel("0");
-JLabel res_ele_cubo = new JLabel("0");
-JLabel res_raiz_quad = new JLabel("0");
-JLabel res_raiz_cub = new JLabel("0");
-JLabel res_abs = new JLabel("0");
-
-// Inserir no frame fundo
-fundo.add(res_div2);
-fundo.add(res_ele_cubo);
-fundo.add(res_raiz_quad);
-fundo.add(res_raiz_cub);
-fundo.add(res_abs);
-
-// Alterar tamanho da fonte
-res_div2.setFont(new Font("Arial", Font.BOLD, 18));
-res_ele_cubo.setFont(new Font("Arial", Font.BOLD, 18));
-res_raiz_quad.setFont(new Font("Arial", Font.BOLD, 18));
-res_raiz_cub.setFont(new Font("Arial", Font.BOLD, 18));
-res_abs.setFont(new Font("Arial", Font.BOLD, 18));
-
-// Alterar cor da fonte
-res_div2.setForeground(Color.decode("#51a30a"));
-res_ele_cubo.setForeground(Color.decode("#51a30a"));
-res_raiz_quad.setForeground(Color.decode("#51a30a"));
-res_raiz_cub.setForeground(Color.decode("#51a30a"));
-res_abs.setForeground(Color.decode("#51a30a"));
-
-// Organização da tela
-res_div2.setBounds(215, 280, 160, 50);
-res_ele_cubo.setBounds(170, 340, 160, 50);
-res_raiz_quad.setBounds(170 , 400, 160, 50);
-res_raiz_cub.setBounds(170 , 460, 160, 50);
-res_abs.setBounds(170, 520, 160, 50);
-```
-
-### Criando um botão para executar uma função
-
-Primeiramente criamos um botão normal, carregando uma imagem, depois disso:
-
-- Tiramos a borda pintada
-- Adicionamos no widget pai
-- Organizamos na tela
-- Adicionamos uma `tooltip` para aparecer quando o mouse passar por cima
-
-```java
-// Criar um botão
-ImageIcon botao = new ImageIcon("src\\SuperCalculadora\\Imagens\\botao.png");
-JButton calcular = new JButton(botao);
-calcular.setBorderPainted(false);
-calcular.setContentAreaFilled(true);
-fundo.add(calcular);
-calcular.setBounds(370, 120, 100, 100);
-calcular.setToolTipText("Clique para calcular!");
-```
-
-### Criar uma animação para o clique do mouse
-
-Criar uma animação é algo até simples porque somente mudamos as coordenadas do elemento, então vamos explicar passo a passo como funciona esta parte abaixo:
-
-```java
-// Adicionar um MouseListener para a animação
-		  calcular.addMouseListener(new MouseAdapter() {
-		  @Override
-		  
-		  public void mousePressed(MouseEvent e) {
-		      // Diminuir o tamanho do botão para simular uma animação de clique
-		      calcular.setBounds(368, 118, 100, 100);                
-		  }
-		
-		  @Override
-		  public void mouseReleased(MouseEvent e) {
-		      // Reverter o tamanho do botão após um curto período
-		      calcular.setBounds(370, 120, 100, 100);
-			}
-});
-```
-
-`Listeners`, `adapters` e `events` fazem parte do sistema de tratamento de eventos em Java, muito utilizado em interfaces gráficas para capturar ações do usuário, como cliques, movimentos do mouse ou pressionamento de teclas.
-
-### 1. **`Events` (Eventos)**
-
-Um evento é qualquer ação que ocorre durante a execução de uma aplicação, como um clique do mouse, movimentação do cursor ou digitação no teclado. O `MouseEvent` é o tipo de evento que representa uma ação do mouse (como pressionar ou liberar o botão do mouse).
-
-### 2. **`Listeners` (Ouvintes)**
-
-Um `listener` é um objeto que "ouve" um determinado tipo de evento e responde a ele. Ou seja, é uma interface ou classe que espera por um evento específico e, quando esse evento ocorre, o `listener` é notificado para executar uma ação. No código, o `MouseListener` é o ouvinte que está "ouvindo" os eventos de mouse no botão `calcular`.
-
-### 3. **`Adapters` (Adaptadores)**
-
-Um `adapter` é uma classe especial que implementa uma interface de `listener`, mas com implementações vazias para todos os métodos. Isso facilita o desenvolvimento, já que só precisa sobrescrever os métodos que realmente importam para a sua aplicação. No caso, está sendo usado um `MouseAdapter`, que implementa o `MouseListener` com implementações vazias, e você só precisa sobrescrever os métodos que deseja, como `mousePressed` e `mouseReleased`.
-
-### Explicação do código:
-
-- **`addMouseListener(new MouseAdapter() {...})`**: Você está adicionando um ouvinte do tipo `MouseListener` ao botão `calcular`, mas em vez de implementar todos os métodos do `MouseListener`, você está usando um `MouseAdapter` para sobrescrever apenas os métodos que importam (neste caso, `mousePressed` e `mouseReleased`).
-- **`mousePressed(MouseEvent e)`**: Este método é chamado quando o botão do mouse é pressionado. Aqui, você altera o tamanho do botão `calcular` para simular uma animação de clique.
-- **`mouseReleased(MouseEvent e)`**: Este método é chamado quando o botão do mouse é liberado. Ele reverte o tamanho do botão de volta ao original após a simulação do clique.
-
-### Criar uma função para o clique do botão
-
-```java
-calcular.addActionListener(new ActionListener(){
-           
-@Override
-public void actionPerformed(ActionEvent e) {
-    
-    int num = Integer.parseInt(spinner.getValue().toString());
-    if (num>100){
-        JOptionPane.showMessageDialog(null, "Favor inserir um valor até 100!");
-        spinner.setValue(0);
-        res_div2.setText("0");
-        res_ele_cubo.setText("0");
-        res_raiz_quad.setText("0");
-        res_raiz_cub.setText("0");
-        res_abs.setText("0");      
-        return;
-        }
-            
-
-    // Resto da divisão
-    int r = (int)num % 2;
-    res_div2.setText(String.valueOf(r));
-
-    // Elevado ao cubo
-    float cub = (float) Math.pow(num, 3);
-    res_ele_cubo.setText(String.format("%.2f",cub));
-
-    // Raiz Quadrada
-    float raiz = (float) Math.sqrt(num);
-    res_raiz_quad.setText(String.format("%.2f",raiz));
-
-    // Rais Cúbica
-    float raiz_c = (float) Math.cbrt(num);
-    res_raiz_cub.setText(String.format("%.2f",raiz_c));
-
-    // Valor absoluto
-    int abs = (int) Math.abs(num);
-    res_abs.setText(String.valueOf(abs));
-}
-});
-```
-
-O código utiliza um **ActionListener** para executar uma ação em resposta a um evento, especificamente quando o botão `calcular` é clicado.
-
-### Funcionamento:
-
-1. **ActionListener**:
-    - Um **ActionListener** está sendo adicionado ao botão `calcular`. Esse listener é uma interface responsável por "ouvir" ações, como cliques de botões. Quando o botão é acionado, o método `actionPerformed` é chamado automaticamente, onde a lógica de processamento do evento é implementada.
-2. **Conversão do valor do spinner**:
-    - O valor selecionado no componente `spinner` está sendo convertido para um número inteiro utilizando `Integer.parseInt(spinner.getValue().toString())`. O componente `spinner` permite selecionar ou digitar valores, e este valor está sendo manipulado como uma string que é convertida para um número.
-3. **Verificação do valor**:
-    - Antes de qualquer cálculo, uma condição está sendo verificada para garantir que o número não seja maior que 100. Caso seja, uma caixa de diálogo com uma mensagem de erro é exibida através de `JOptionPane.showMessageDialog`. O valor do `spinner` é então redefinido para 0, assim como todos os campos de resultado (`res_div2`, `res_ele_cubo`, etc.). A execução do método é interrompida com `return`, impedindo que os cálculos seguintes sejam feitos.
-4. **Cálculos matemáticos**:
-    - Se o valor do `spinner` for válido (menor ou igual a 100), diferentes operações matemáticas são realizadas e exibidas em campos de saída:
-    - **Resto da divisão por 2**: O valor do número mod 2 está sendo calculado com `num % 2`, representando o resto da divisão. O resultado é exibido no campo `res_div2`.
-    - **Elevação ao cubo**: A operação de elevação ao cubo está sendo feita com `Math.pow(num, 3)`. O resultado é formatado para duas casas decimais e exibido no campo `res_ele_cubo`.
-    - **Raiz quadrada**: A raiz quadrada do número está sendo calculada com `Math.sqrt(num)`, e o resultado também é formatado e exibido em `res_raiz_quad`.
-    - **Raiz cúbica**: A raiz cúbica está sendo obtida por meio de `Math.cbrt(num)` e o valor é mostrado no campo `res_raiz_cub`.
-    - **Valor absoluto**: A função `Math.abs(num)` está sendo utilizada para calcular o valor absoluto (sem sinal) do número, e o resultado é exibido em `res_abs`.
-
-### Finalizando
-
-Definimos a visualização da interface
-
-```java
-// Definir a visualização das telas
-tela.setResizable(false);
-tela.setVisible(true);
-```
