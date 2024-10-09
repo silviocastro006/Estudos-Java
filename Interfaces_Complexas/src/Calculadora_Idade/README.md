@@ -3,270 +3,123 @@
 
 ## Enunciado
 
-Crie a interface abaixo com operadores ternários para verificar a idade conforme a data inserida:
+Cria uma tela que calcule a idade da pessoa com o ano atual do sistema
 
-- O ano atual deverá ser o retirado do sistema operacional ( não inserir manualmente )
-- Se idade >= 18 será Maior idade
-- Se idade < 18 será Menor idade
-- Se idade >= 100 <=115 será Ancião
-- Se idade > 115 será Possivelmente morto
 </aside>
 
-![image](https://github.com/user-attachments/assets/994861a4-61fd-4a6c-9a54-1cb765412d37)
+Bom, no vídeo Exercícios Java #6 o Guanabara pediu para fazer uma interface mais ou menos assim:
+
+![image](https://github.com/user-attachments/assets/6e1fee7a-d827-4bdb-adab-4e037f926290)
 
 
-![image](https://github.com/user-attachments/assets/c9938b2f-d402-439a-a18f-360905482907)
+Ele é composto por algumas coisas, além do Jframe que fica no fundo, nós temos os seguintes componentes:
+
+![image](https://github.com/user-attachments/assets/b69c91d8-a82c-4008-8b2d-9ca8dd552eef)
 
 
-# Criando a interface
+Nas propriedades dos elementos podemos colocar icons o que coloca uma imagem adaptada e para que seja do tamanho ideal, é melhor usarmos algum editor de imagem para ja ter o tamanho certo, por exemplo os ícones do calendário e do usuário eu peguei do [freepik.co](http://freepik.co)m e redimensionei usando o gimp.
 
-Bom vamos fazer um pouquinho mais bonito né? E por enquanto não vou usar o `Swing low code`, vou fazer na mão, mas com outros elementos
+## O que o programa faz?
 
-## Tela de fundo
+Simples, o usuário pode usar o slider ou digitar o ano e clicar em calcular e no back-end o programa deverá pegar o ano atual e subtrair pelo valor digitado.
 
-Continuei o mesmo padrão que usei no exercício anterior de 500x600, então criei a seguinte tela de fundo: 
-
-![image](https://github.com/user-attachments/assets/edc7ae50-a51b-47ae-b51b-e7a3207fe27b)
-
-
-### Vamos então criar o programa base no Java, começando com o JFrame:
+Inicialmente coloquei da seguinte forma, mas vamos alterar.
 
 ```java
-// Criando a tela principal
-JFrame tela = new JFrame("Exercício aula 8 - Verificador de Idade");
-tela.setSize(515, 630);
-tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-tela.setLocationRelativeTo(null);
+private void btnCalcActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        int an = Integer.parseInt(txtAn.getValue().toString());
+        int id = 2024 - an;
+        lblIdade.setText(Integer.toString(id));      
+    }   
 ```
 
-Aqui é bem padrão, instanciamos um objeto, definimos o seu tamanho, seu comportamento ao fechar e onde ele vai ficar na tela.
+Claro que o programa é bem maior que esse pois tem toda a parte de criar a tela e configurar mas vou abstrair pois usei o low-code neste caso, vamos nos atender no que ele está fazendo passo a passo:
 
-### Inserindo a imagem no fundo da tela
-
-Como o `JFrame` não tem uma propriedade embutida para receber imagem, criamos um `JLabel` indicando uma imagem pra ele, definindo um valor exato e colocamos na tela principal.
+1 ) Crio uma função que será um evento quando o botão for clicado
 
 ```java
- // Criar um label para por uma imagem de fundo
+private void btnCalcActionPerformed(java.awt.event.ActionEvent evt) {                                        
+```
+
+2 ) Crio uma variável chamada `an` e ela vai ser a conversão para inteiro do valor que eu peguei no `slider`, mas se você reparar, eu estou convertendo 2 vezes. Por que?
+
+Para entender isso, precisamos lembrar que se fosse um `textfield` o valor resgatado seria `character` então somente uma conversão resolveria, mas o `slider` é um objeto, então precisamos:
+
+- inicialmente pegar o valor dele, mas ele retorna um objeto e não um valor com tipo primitivo, então precisamos em seguida;
+- Converter para String;
+- Finalmente converter para inteiro
+
+```java
+int an = Integer.parseInt(txtAn.getValue().toString());
+```
+
+3 ) Aqui eu estou fazendo de forma bem manual, mas e se for outro ano? Vamos resolver já já
+
+```java
+int id = 2024 - an;
+```
+
+4 ) Aqui chamamos aquele `label` que está em vermelho para trocar ou `setar` o valor para a variável id
+
+```java
+lblIdade.setText(Integer.toString(id));
+```
+
+## Vamos melhorar o programa
+
+No exercício anterior que mexemos com datas, usamos uma biblioteca do `java.util` chamada de `Date` , mas termos várias formas de resolver pois a biblioteca `Date` e `Calendar` foram melhoradas e criado um pacote chamado `Java.Time`.
+
+### 1 ) Usando o `Date`
+
+Usando o `Date` percebi que existe algo muito esquisito com esta classe, pois por algum motivo quando usamos o método `getYear()` ele retorna o ano -1900 então eu tive que somar manualmente para dar o ano correto.
+
+```java
+import java.util.Date;
+
+private void btnCalcActionPerformed(java.awt.event.ActionEvent evt) {                                        
+    int an = Integer.parseInt(txtAn.getValue().toString());
+    Date data = new Date();
+    int ano_atual = data.getYear()+1900;
+    int idade = ano_atual - an;
+    lblIdade.setText(String.valueOf(idade));
         
-ImageIcon image = new ImageIcon("src\\Verificador_Idade\\imagens\\tela_idade.png");
-JLabel fundo = new JLabel(image);
-tela.add(fundo);
-fundo.setBounds(0,0,500,600);
 ```
 
-Note que o caminho precisa estar relativo, senão ele não vai achar a imagem, como todo o projeto Java tem a pasta `src`, então basta deixar desta forma.
+### 2 ) Usando o `Calendar`
 
-## Criando os componentes principais
+O `Calendar` é um pouco diferente pois nós não instanciamos um novo objeto mas pegamos as propriedades do sistema atual para utilizar, então logo de cara a forma como declaramos a criação de um calendário é diferente pois não usamos o `new`.
 
-### Botão
-
-Para criar um botão, também é algo simples, mas desta vez eu não fiz o seu gráfico, apenas criei de forma padrão no Java.
+Além disso para pegarmos o ano precisamos chamar o método get e dentro dele indicamos o valor que queremos pegar.
 
 ```java
-// Criar um botão em algum lugar
-JButton botao = new JButton("Calcular");
-botao.setSize(150, 30);
-fundo.add(botao);
-botao.setLocation(175, 352);
-botao.setForeground(Color.black);
-botao.setBackground(Color.decode("#d0f0f4"));
-botao.setFont(new Font("Arial",Font.BOLD,20));
-botao.setFocusPainted(false);
+import java.util.Calendar;
+
+private void btnCalcActionPerformed(java.awt.event.ActionEvent evt) {                                        
+    int an = Integer.parseInt(txtAn.getValue().toString());
+    Calendar calendario = Calendar.getInstance();
+    int ano_atual = calendario.get(Calendar.YEAR);
+    int idade = ano_atual - an;
+    lblIdade.setText(String.valueOf(idade));
+}                                       
 ```
 
-Repare que o `setFocusPainted` é para tirar o retângulo do texto de dentro do botão quando passamos o mouse para ficar um pouco mais limpo.
+### 3 ) Usando o Time
 
-### Input para o nome
-
-É comum confundir o nome dos widgets ainda mais quando usa duas linguagens diferentes, como no `Python` é `Entry`, no `Java` é `JTextField`, seu input padrão de texto.
-
-```java
-// Criando o input para o nome
- JTextField input_nome = new JTextField();
- input_nome.setSize(263,36);
- input_nome.setLocation(170, 223);
- input_nome.setFont(new Font("Arial",Font.PLAIN,20));
- input_nome.setForeground(Color.decode("#d0d0cf"));
- input_nome.setText("Clique para digitar nome...");
- input_nome.setMargin(new Insets(0,10,0,0));
- fundo.add(input_nome);
-```
-
-Um método diferente que usei foi o `setMargin`, ele serve para indicar as margens internas do texto dentro do widget, eu usei para criar uma indentação um pouco para a direita, para não ficar colado com a borda do input.
-
-### `Spinner` para o ano de nascimento
-
-`Spinner` é um componente que pode ter várias formas de tratamento, como eu estava fazendo um exercício simples, não quis me aprofundar tanto, apenas deixei como modelo numérico, adicionei mínimo e máximo.
-
-```java
-// Criando o spinner para a o ano
-SpinnerModel model = new SpinnerNumberModel(1980, 1900, 999999999, 1);
-JSpinner input_ano = new JSpinner(model);
-input_ano.setSize(163, 36);
-input_ano.setLocation(270, 280);
-       
-// Acessando o componente de texto dentro do spinner para editar
-JComponent editor = input_ano.getEditor();
-JFormattedTextField txtspinner = ((JSpinner.DefaultEditor) editor).getTextField();
- txtspinner.setFont(new Font("Arial",Font.PLAIN,25));
- txtspinner.setHorizontalAlignment(JFormattedTextField.CENTER);
-```
-
-Algo diferente também que aprendi foi acessar os componentes internos de casa widget, como o `JComponent`, podemos acessar o editor do widget que quisermos e a partir dele acessar como o texto será formatado, de forma mais específica, no meu caso acessei, mudei a sua fonte e o seu alinhamento.
-
-### `JLabel` para o resultado final
-
-Uma das últimas partes é adicionar o resultado da operação que formos fazer, então criei um `JLabel` para poder mostrar a manipulação dos dados que for resgatar.
-
-```java
-// Adicionando label para resultado
-       
-JLabel resultado = new JLabel();
-resultado.setText("Clique em calcular para ver o resultado");
-resultado.setForeground(Color.decode("#d0d0cf"));
-resultado.setSize(360, 36);
-resultado.setLocation(75, 491);       
-resultado.setFont(new Font("Arial",Font.PLAIN,20));
-fundo.add(resultado);
-```
-
-## Preparando o script
-
-### Resgatando o ano atual do sistema
-
-Uma prática bem padrão é utilizar os dados vindos do sistema operacional, para que não seja necessário alterar manualmente, sendo assim importei a biblioteca `Java.Time` para utilizar alguns métodos específicos.
+Temos algumas formas de resolver com o time, a principal é que não precisamos necessariamente criar um objeto para fazer as manipulações, no exemplo abaixo eu usei um método direto para pegar somente o ano atual do sistema.
 
 ```java
 import java.time.*;
-LocalDate tempo = LocalDate.now();
-int ano_atual = tempo.getYear();
+
+private void btnCalcActionPerformed(java.awt.event.ActionEvent evt) {                                        
+    int an = Integer.parseInt(txtAn.getValue().toString());
+    int ano_atual = LocalDate.now().getYear();
+    int idade = ano_atual - an;
+    lblIdade.setText(String.valueOf(idade));
+}            
 ```
 
-Desta forma a variável `ano_atual` terá o valor inteiro do ano vindo do SO.
+Com este exercício podemos ver que temos inúmeras formas de resolver a mesma coisa, basta claro pesquisar e ter a força de vontade para resolver. 
 
-### Adicionando eventos no `input_nome`
+Se quiser ver este exercício completo, pode ir no meu github em: https://github.com/silviocastro006/Estudos-Java/tree/main/Interfaces_Complexas/src
 
-Meu intuito inicial é quando clicado no `input_nome` ele apague a “máscara” e coloque o texto para preto.
-
-```java
-input_nome.addMouseListener(new MouseAdapter(){
-           
- @Override
- public void mousePressed(MouseEvent e){
-     input_nome.setForeground(Color.black);
-     input_nome.setText("");
- }
- 
- @Override
- public void mouseReleased(MouseEvent e){
-     
- }
-  
-});
-```
-
-Além disso se for clicado mas não for digitado nada, ou seja perder o foco, ele volta ao que estava no início
-
-```java
-input_nome.addFocusListener(new FocusAdapter() {
-       
- @Override
- public void focusLost(java.awt.event.FocusEvent e){
-     if(input_nome.getText().isEmpty()){
-         input_nome.setForeground(Color.decode("#d0d0cf"));
-         input_nome.setText("Clique para digitar nome...");
-     }
-}});
-       
-```
-
-### Adicionando eventos para o botão
-
-O botão que comanda toda a parte de manipulação dos dados, além disso é onde a maior parte dos comandos ficam (pelo menos em um evento), então nesta primeira parte nós definimos uma `variável String chamada tipo global` para ser enxergada em todas as funções, a primeira parte é restado o valor que está dentro do `input_nome` e enquanto for padrão ou vazio ele dará uma mensagem de erro.
-
-```java
-botao.addActionListener(new ActionListener(){
-		String tipo;
-		@Override
-		public void actionPerformed(ActionEvent ae) {
-		// Pegar valor do nome
-		String nome = input_nome.getText();
-		while(nome.equals("Clique para digitar nome...")|| nome.equals("")){
-				JOptionPane.showMessageDialog(null, "Por favor insira um nome...", "Erro", JOptionPane.ERROR_MESSAGE);
-				input_ano.setValue(1980);
-				return;
-}
-```
-
-Feito isso vamos calcular a idade com outra tratativa de erro onde o ano não poderá ser menor que 1940 nem maior que 2023, fora isso é bem básico.
-
-```java
-// Calcular idade
-                int ano_nasc = Integer.parseInt(String.valueOf(input_ano.getValue()));
-                while(ano_nasc<1900 || ano_nasc >2023){
-                    JOptionPane.showMessageDialog(null, "Insira um ano maior que 1940 e menor que 2023", "Erro", JOptionPane.ERROR_MESSAGE);
-                    input_ano.setValue(1980);
-                    return;
-                }
-                int idade = (ano_atual-ano_nasc);
-```
-
-Fora isso definimos algumas condições para os possíveis resultados para definir o que será mostrado na `label` resposta.
-
-```java
-// Condições: 
-                
-      if(idade> 115){
-          tipo = "Possivelmente morto";
-      } else if((idade>=100 && idade <= 115)){
-          tipo = "Ancião";
-      } else if(idade >= 18){
-          tipo = "Maior de idade";
-      } else if(idade < 18){
-          tipo = "Menor de idade";
-      }
-
-      
-      // Inserir dados no resultado
-      resultado.setForeground(Color.black);
-      String resposta = String.format("%s com %d anos", tipo,idade);
-      resultado.setText(resposta);
-      resultado.setHorizontalAlignment(JTextField.CENTER);
-      
-      // limpar o input nome
-      input_nome.setForeground(Color.decode("#d0d0cf"));
-      input_nome.setText("Clique para digitar nome...");
-      input_ano.setValue(1980);
-     
-  }
- 
-});
-```
-
-## Finalizando o programa
-
-```java
-// Adicionando na tela
-       fundo.add(input_ano);
-       
-        
-        
-        
-  // Criando o posicionamento e setar a tela para mostrar
-  tela.setResizable(false);
-  tela.setVisible(true);
-  
-  
-  
-}
-}
-```
-
-# Quer ver o código completo?
-
-<aside>
-💡
-
-Acesse o meu repositório de **`github`** para ver todos os meus códigos: https://github.com/silviocastro006/Estudos-Java
-
-</aside>
+![image](https://github.com/user-attachments/assets/99ced837-acd2-485c-b4d5-abe95c0530df)
