@@ -1,4 +1,4 @@
-package cursojavapoo;
+package cursojavapoo.TesteClasses;
 
 public class RodaCaneta {
 
