@@ -1,5 +1,5 @@
 
-package cursojavapoo.TesteClasses;
+package TesteClasses;
 
 public class RodaCadeira {
     public static void main(String[] args) {

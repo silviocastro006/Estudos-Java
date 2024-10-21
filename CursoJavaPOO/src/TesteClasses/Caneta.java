@@ -1,4 +1,4 @@
-package cursojavapoo.TesteClasses;
+package TesteClasses;
 
 public class Caneta {
     
