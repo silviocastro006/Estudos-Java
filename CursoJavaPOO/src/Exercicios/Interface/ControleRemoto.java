@@ -105,6 +105,8 @@ public class ControleRemoto implements Controlador {
     public void play() {
         if(this.getLigado() && !this.getTocando()){
             this.setTocando(true);
+        }else{
+            System.out.println("Não consegui reproduzir...");
         }
     }
 
@@ -112,6 +114,8 @@ public class ControleRemoto implements Controlador {
     public void pause() {
         if(this.getLigado() && this.getTocando()){
             this.setTocando(false);
+        }else{
+            System.out.println("Não consegui pausar...");
         }
     }
     
